@@ -30,7 +30,7 @@ printLineLimit()
 
 removeFiles()
 {
-    while IFS= read -r file || [[ -n "$file" ]]; do
+    for file in "${DELETE_CONTENT_FILES[@]}"; do
         [[ -z "$file" || "$file" =~ ^[[:space:]]*# ]] && continue
 
         if [[ ! -e "$file" ]]; then
@@ -46,7 +46,7 @@ removeFiles()
             rm -f -- "$file"
         fi
     
-    done < "$INSTALL_LOG_FILE"
+    done
 
     for dir in "${SAFE_EMPTY_DIRS[@]}"; do
         if [[ -d "$dir" ]]; then
@@ -89,11 +89,14 @@ main()
     fi
 
     CAN_REMOVE="0"
+    mapfile -t DELETE_CONTENT_FILES < "$INSTALL_LOG_FILE"
 
-    echo "- Starting to remove"
-    echo
-    echo "--------------------"
-    cat "$INSTALL_LOG_FILE"
+    echo "--------------------" 
+
+    for file in "${DELETE_CONTENT_FILES[@]}"; do
+        echo "$file"
+    done
+
     echo "--------------------"
     echo
     echo "We're about to delete the following files. Do you still want to continue?"
@@ -112,6 +115,7 @@ main()
 
     echo "- Removing SplameiPlay"
 
+    sudo -v
     removeFiles
 
     printLineLimit "  - Done!"
