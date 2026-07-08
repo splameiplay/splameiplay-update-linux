@@ -27,8 +27,9 @@ FILES_EXTRACTED_TEMP_LOCATION="/tmp/splameiplay-data"
 FILES_EXTRACTED_DATA_PATH="/tmp/splameiplay-data/DATA"
 FILES_EXTRACTED_POSTINST_PATH="/tmp/splameiplay-data/CONTROL/POSTINST"
 
-RELEASE_CHANNEL_FILE_LOCATION="$HOME/.splamei/splameiplay/launcher/updater-data/channelType.dat"
-RELEASE_CHANNEL_FILE_DIR="$HOME/.splamei/splameiplay/launcher/updater-data/"
+VERSION_FILE_LOCATION="/etc/splamei/splameiplay/launcher/updater-data/updateVer.dat"
+RELEASE_CHANNEL_FILE_LOCATION="/etc/splamei/splameiplay/launcher/updater-data/channelType.dat"
+RELEASE_CHANNEL_FILE_DIR="/etc/splamei/splameiplay/launcher/updater-data/"
 
 INSTALL_LOG_FILE="/var/log/splameiplay-install-files.log"
 
@@ -104,9 +105,11 @@ checkSystem()
 updateApp()
 {
     if [ ! -f "$RELEASE_CHANNEL_FILE_LOCATION" ]; then
-        mkdir -p "$RELEASE_CHANNEL_FILE_DIR"
+        sudo mkdir -p "$RELEASE_CHANNEL_FILE_DIR"
+        sudo chmod 755 "$RELEASE_CHANNEL_FILE_DIR"
 
-        echo "0" > "$RELEASE_CHANNEL_FILE_LOCATION"
+        sudo bash -c 'echo "0" > "$1"' _ "$RELEASE_CHANNEL_FILE_LOCATION"
+        sudo chmod 666 "$RELEASE_CHANNEL_FILE_LOCATION"
         echo "No release channel set! Defaulting to 'Stable'"
     fi
 
@@ -124,6 +127,9 @@ updateApp()
 
     echo "Release channel: $RELEASE_CHANNEL"
     echo
+
+    sudo bash -c 'echo "$2" > "$1"' _ "$VERSION_FILE_LOCATION" "$VERSION_CODE"
+    sudo chmod 755 "$VERSION_FILE_LOCATION"
 
     if which curl >/dev/null 2>&1; then
         echo "- Downloading SplameiPlay"
@@ -237,17 +243,17 @@ main()
     else
         if [ "$ARG_1" == "channel" ]; then
             if [ "$ARGS" -eq 2 ]; then
+                sudo mkdir -p "$RELEASE_CHANNEL_FILE_DIR"
+                sudo chmod 755 "$RELEASE_CHANNEL_FILE_DIR"
+
                 if [ "$ARG_2" == "stable" ]; then
-                    mkdir -p "$HOME/.splamei/splameiplay/launcher/updater-data"
-                    echo "0" > "$RELEASE_CHANNEL_FILE_LOCATION"
+                    sudo bash -c 'echo "0" > "$1"' _ "$RELEASE_CHANNEL_FILE_LOCATION"
                     echo "Changed the release channel to the Stable channel"
                 elif [ "$ARG_2" == "beta" ]; then
-                    mkdir -p "$HOME/.splamei/splameiplay/launcher/updater-data"
-                    echo "1" > "$RELEASE_CHANNEL_FILE_LOCATION"
+                    sudo bash -c 'echo "1" > "$1"' _ "$RELEASE_CHANNEL_FILE_LOCATION"
                     echo "Changed the release channel to the Beta channel"
                 elif [ "$ARG_2" == "alpha" ]; then
-                    mkdir -p "$HOME/.splamei/splameiplay/launcher/updater-data"
-                    echo "2" > "$RELEASE_CHANNEL_FILE_LOCATION"
+                    sudo bash -c 'echo "2" > "$1"' _ "$RELEASE_CHANNEL_FILE_LOCATION"
                     echo "Changed the release channel to the Alpha channel"
                 else
                     echo "Unknown release channel. The only valid channels are 'stable', 'alpha' or 'beta' (case sensitive)"
@@ -255,6 +261,8 @@ main()
 
                     exit 1
                 fi
+
+                sudo chmod 666 "$RELEASE_CHANNEL_FILE_LOCATION"
             else
                 echo "To change the channel, run the command '$ARG_0 channel <channel>'"
                 echo "For more information, please read the official documantation https://docs.veemo.uk"
