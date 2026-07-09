@@ -17,8 +17,8 @@ FLOW_VERSION="1.2"
 
 MY_VERSION_URL="https://www.veemo.uk/flow/$FLOW_VERSION/splameiplay/update/linux/version"
 
-FILES_DOWNLOAD_URL="https://www.veemo.uk/flow/$FLOW_VERSION/splameiplay/update/linux/app/CHANNEL/data.zip"
-FILES_DOWNLOAD_SIG_URL="https://www.veemo.uk/flow/$FLOW_VERSION/splameiplay/update/linux/app/CHANNEL/data.zip.sig"
+FILES_DOWNLOAD_URL="https://www.veemo.uk/flow/$FLOW_VERSION/splameiplay/releases/linux/CHANNEL/data.zip"
+FILES_DOWNLOAD_SIG_URL="https://www.veemo.uk/flow/$FLOW_VERSION/splameiplay/releases/linux/CHANNEL/data.zip.sig"
 
 FILES_DOWNLOAD_LOCATION="/tmp/splameiplayData.zip"
 FILES_DOWNLOAD_SIG_LOCATION="/tmp/splameiplayData.zip.sig"
