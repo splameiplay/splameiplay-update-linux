@@ -72,6 +72,14 @@ main()
 		exit 1
 	fi
 
+	echo "Before we install SplameiPlay, you need to agree to the apps licence. You can read the latest version here: https://www.veemo.uk/splameiplay/guidelines/"
+	echo "If your ready to continue and agree to it, press any key, otherwise please quit the installer (CTRL+C on most devices)"
+	echo
+
+	read -n 1 -r -s -p "Press any key to continue..."
+	echo
+	echo
+
 	if which curl >/dev/null 2>&1; then
 		echo "- Downloading SplameiPlay Update (Linux)"
 
